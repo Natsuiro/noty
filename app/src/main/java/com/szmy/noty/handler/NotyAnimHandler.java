@@ -15,7 +15,7 @@ public class NotyAnimHandler extends Handler {
     private NotyFlowView targetView;
     private int preMove = 0;
     public NotyAnimHandler(NotyFlowView view){
-        this.frame_count = 20;
+        this.frame_count = 30;
         mCount = 0;
         targetView = view;
     }
@@ -26,18 +26,7 @@ public class NotyAnimHandler extends Handler {
 
     @Override
     public void handleMessage(@NonNull Message msg) {
-
-
-        switch (msg.what){
-            case 0:
-                if (doScroll())//如果滑动结束
-                    targetView.onScrollStop();
-                break;
-            case 1:
-                doScroll();
-                break;
-        }
-
+        doScroll();
     }
 
     private boolean doScroll(){
@@ -49,7 +38,7 @@ public class NotyAnimHandler extends Handler {
             scrollY-=preMove;
             targetView.scrollBy(0,scrollY);
             preMove = tem;
-            int delay_time = 10;
+            int delay_time = 5;
 
             sendEmptyMessageDelayed(0, delay_time);
             return false;
