@@ -14,16 +14,33 @@ public class NotyAnimHandler extends Handler {
     private int deltaY;
     private NotyFlowView targetView;
     private int preMove = 0;
-    public NotyAnimHandler(NotyFlowView view,int deltaY){
+    public NotyAnimHandler(NotyFlowView view){
         this.frame_count = 20;
         mCount = 0;
-        this.deltaY = deltaY;
         targetView = view;
     }
 
+    public void setDeltaY(int deltaY) {
+        this.deltaY = deltaY;
+    }
 
     @Override
     public void handleMessage(@NonNull Message msg) {
+
+
+        switch (msg.what){
+            case 0:
+                if (doScroll())//如果滑动结束
+                    targetView.onScrollStop();
+                break;
+            case 1:
+                doScroll();
+                break;
+        }
+
+    }
+
+    private boolean doScroll(){
         mCount++;
         if (mCount<=frame_count){
             float fraction = (float) mCount/frame_count;
@@ -33,7 +50,13 @@ public class NotyAnimHandler extends Handler {
             targetView.scrollBy(0,scrollY);
             preMove = tem;
             int delay_time = 10;
+
             sendEmptyMessageDelayed(0, delay_time);
+            return false;
+        }else{
+            mCount = 0;
+            return true;
         }
     }
+
 }
