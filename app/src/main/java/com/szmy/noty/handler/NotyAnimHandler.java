@@ -13,8 +13,9 @@ public class NotyAnimHandler extends Handler {
     private int frame_count;
     private int deltaY;
     private NotyFlowView targetView;
+    private int preMove = 0;
     public NotyAnimHandler(NotyFlowView view,int deltaY){
-        this.frame_count = 60;
+        this.frame_count = 20;
         mCount = 0;
         this.deltaY = deltaY;
         targetView = view;
@@ -27,8 +28,11 @@ public class NotyAnimHandler extends Handler {
         if (mCount<=frame_count){
             float fraction = (float) mCount/frame_count;
             int scrollY = (int) (fraction * deltaY);
-            targetView.scrollTo(0,targetView.getScrollY()+scrollY);
-            int delay_time = 20;
+            int tem = scrollY;
+            scrollY-=preMove;
+            targetView.scrollBy(0,scrollY);
+            preMove = tem;
+            int delay_time = 10;
             sendEmptyMessageDelayed(0, delay_time);
         }
     }
