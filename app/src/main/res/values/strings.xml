@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Noty</string>
+    <string name="tips">便签</string>
+    <string name="new_tip">新建</string>
+</resources>

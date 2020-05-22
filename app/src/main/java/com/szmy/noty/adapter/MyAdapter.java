@@ -5,31 +5,29 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.szmy.noty.R;
-
-import org.w3c.dom.Text;
+import com.szmy.noty.model.NotyBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyAdapter extends NotyAdapter<String> {
+public class MyAdapter extends NotyAdapter<NotyBean> {
     private Context mContext;
-    private List<String> list;
+    private List<NotyBean> list;
     public MyAdapter(Context context){
         mContext = context;
     }
 
 
-
     @Override
-    List<String> getDataList() {
+    List<NotyBean> getDataList() {
         if (list==null) list = new ArrayList<>();
         return list;
     }
 
     @Override
-    void bindView(NotyViewHolder viewHolder, String item) {
+    void bindView(NotyViewHolder viewHolder, NotyBean item) {
         VH holder = (VH) viewHolder;
-        holder.textView.setText(item);
+        holder.textView.setText(item.getContent());
     }
 
     @Override
@@ -39,7 +37,7 @@ public class MyAdapter extends NotyAdapter<String> {
     }
 
     @Override
-    public void setList(List<String> list) {
+    public void setList(List<NotyBean> list) {
         this.list = list;
     }
 

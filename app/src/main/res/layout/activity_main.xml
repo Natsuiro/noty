@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+   <RelativeLayout
+       android:layout_margin="5dp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+      <TextView
+          android:layout_alignBottom="@+id/newTip"
+          android:textColor="@android:color/black"
+          android:text="@string/tips"
+          android:gravity="center"
+          android:textSize="24sp"
+          android:padding="5dp"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
+
+      <Button
+          android:id="@+id/newTip"
+          android:text="@string/new_tip"
+          android:layout_margin="3dp"
+          android:background="@color/colorAccent"
+          android:layout_alignParentEnd="true"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
+   </RelativeLayout>
+
+   <com.szmy.noty.widget.NotyFlowView
+       android:id="@+id/noty"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"/>
+
+</LinearLayout>
