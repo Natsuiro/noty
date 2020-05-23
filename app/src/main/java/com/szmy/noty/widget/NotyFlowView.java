@@ -1,18 +1,12 @@
 package com.szmy.noty.widget;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
-import android.widget.BaseAdapter;
-
-import androidx.annotation.NonNull;
 
 import com.szmy.noty.adapter.NotyAdapter;
 import com.szmy.noty.handler.NotyAnimHandler;
@@ -22,6 +16,9 @@ public class NotyFlowView extends ViewGroup {
 
     private int leftTop;
     private int rightTop;
+    private int childWidth;
+    private OnItemClickListener mOnClickListener = null;
+    private OnItemLongTouchListener mOnLongTouchListener = null;
 
     public NotyFlowView(Context context) {
         super(context);
@@ -40,7 +37,9 @@ public class NotyFlowView extends ViewGroup {
     }
 
     private View convertView = null;
-
+    public int getChildWith(){
+        return childWidth;
+    }
     //测量孩子布局在本viewGroup的位置
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -52,7 +51,7 @@ public class NotyFlowView extends ViewGroup {
 
         leftTop = 15;
         rightTop = 15;
-
+        childWidth = middle - 30;
         int paddingMiddle = 30;
         int paddingHeight = 30;
         //遍历每一个子view进行定位
@@ -62,12 +61,12 @@ public class NotyFlowView extends ViewGroup {
             if (child.getVisibility() != GONE) {
                 //左低右高画左边
                 if (leftTop <= rightTop) {
-                    leftHeight = Math.min(child.getMeasuredHeight(), 600);
-                    setChildFrame(child,  paddingStart, leftTop, middle - 30, leftHeight);
+                    leftHeight = Math.min(child.getMeasuredHeight(), 800);
+                    setChildFrame(child,  paddingStart, leftTop, childWidth, leftHeight);
                     leftTop += leftHeight + paddingHeight;
                 } else {
-                    rightHeight = Math.min(child.getMeasuredHeight(), 600);
-                    setChildFrame(child, middle+15, rightTop, middle - 30, rightHeight);
+                    rightHeight = Math.min(child.getMeasuredHeight(), 800);
+                    setChildFrame(child, middle+15, rightTop, childWidth, rightHeight);
                     rightTop += rightHeight + paddingHeight;
                 }
             }
@@ -115,10 +114,11 @@ public class NotyFlowView extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastMotionY = (int) ev.getY();
+                return false;
+            case MotionEvent.ACTION_UP:
                 return false;
             default:
                 return true;
@@ -176,8 +176,21 @@ public class NotyFlowView extends ViewGroup {
     }
 
 
-    NotyAdapter adapter;
 
+    public interface OnItemClickListener{
+        void onClick(int itemId,View item);
+    }
+    public interface OnItemLongTouchListener{
+        boolean onLongTouch(int itemId,View item);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.mOnClickListener = listener;
+    }
+    public void setOnItemLongTouchListener(OnItemLongTouchListener listener){
+        this.mOnLongTouchListener = listener;
+    }
+    NotyAdapter adapter;
     public void setAdapter(NotyAdapter adapter) {
         if (this.adapter==null){
             this.adapter = adapter;
@@ -185,12 +198,27 @@ public class NotyFlowView extends ViewGroup {
         }
         initView();
     }
-
     private void initView() {
         removeAllViews();
-        View view;
         for (int i = adapter.getCount()-1 ;i>=0;i--){
-            view = adapter.getView(i,convertView,this);
+            final View view = adapter.getView(i,convertView,this);
+            final int finalI = i;
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("onClick","itemClick");
+                    if (mOnClickListener !=null){
+                        mOnClickListener.onClick(finalI,view);
+                    }
+                }
+            });
+
+            view.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return mOnLongTouchListener.onLongTouch(finalI,view);
+                }
+            });
             addView(view);
         }
     }

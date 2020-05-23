@@ -1,6 +1,5 @@
 package com.szmy.noty.adapter;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,16 +7,17 @@ import android.widget.BaseAdapter;
 
 import com.szmy.noty.widget.NotyFlowView;
 
-import java.util.Collection;
 import java.util.List;
 
 public abstract class NotyAdapter<T> extends BaseAdapter {
 
-    private NotyFlowView view;
-    public void setTargetView(NotyFlowView view){this.view = view;}
+    NotyFlowView targetView;
+    public void setTargetView(NotyFlowView view){this.targetView = view;}
     public void notifyDataChange(){
-        view.setAdapter(this);
+        targetView.setAdapter(this);
     }
+
+
 
     @Override
     public int getCount() {

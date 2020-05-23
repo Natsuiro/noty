@@ -1,11 +1,14 @@
 package com.szmy.noty.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.szmy.noty.R;
 import com.szmy.noty.model.NotyBean;
+import com.szmy.noty.widget.AutoSplitTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +30,11 @@ public class MyAdapter extends NotyAdapter<NotyBean> {
     @Override
     void bindView(NotyViewHolder viewHolder, NotyBean item) {
         VH holder = (VH) viewHolder;
+        holder.textView.setMaxWidth(400);
         holder.textView.setText(item.getContent());
+        //内容需要换行
     }
+
 
     @Override
     NotyViewHolder getViewHolder() {

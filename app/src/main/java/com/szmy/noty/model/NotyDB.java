@@ -28,7 +28,7 @@ public class NotyDB {
     public void insert(String data){
         SQLiteDatabase db = getDatabase();
         ContentValues values = new ContentValues();
-        values.put("title","马延超");
+        values.put("title","title");
         values.put("content",data);
         values.put("time",new Date().toString());
         db.insert("note",null,values);
@@ -36,13 +36,22 @@ public class NotyDB {
         Log.d("insert","insert");
     }
 
-    public void delete(){
+    public void update(int itemId, String content){
+        SQLiteDatabase db = getDatabase();
+        ContentValues values = new ContentValues();
+        values.put("content",content);
+        db.update("note",values,"_id=?",new String[]{String.valueOf(itemId)});
+        db.close();
+    }
+
+    public void delete(int itemId){
+
+        SQLiteDatabase db = getDatabase();
+        db.delete("note","_id=?",new String[]{String.valueOf(itemId)});
 
     }
 
-    public void update(){
 
-    }
 
     public List<NotyBean> search(){
         Log.d("search","search");
