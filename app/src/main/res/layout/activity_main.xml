@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -29,17 +30,17 @@
           android:layout_alignParentEnd="true"
           android:layout_width="wrap_content"
           android:layout_height="40dp"/>
-
-
    </RelativeLayout>
 
    <EditText
+       android:imeOptions="actionSearch"
        android:id="@+id/searchNotes"
        android:maxLines="1"
        android:layout_margin="10dp"
        android:drawableStart="@android:drawable/ic_menu_search"
        android:background="@drawable/round_edit"
        android:hint="搜索便签"
+       android:inputType="text"
        android:layout_width="match_parent"
        android:layout_height="45dp"/>
 

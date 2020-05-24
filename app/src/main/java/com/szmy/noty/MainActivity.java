@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.szmy.noty.adapter.FlowViewAdapter;
 import com.szmy.noty.model.NotyBean;
@@ -25,8 +27,8 @@ import java.util.List;
 import static com.szmy.noty.R.id.noty;
 
 public class MainActivity extends BaseActivity {
-
-    private List<NotyBean> noties = new ArrayList<>();
+    private EditText searchNotes;
+    private List<NotyBean> contentList = new ArrayList<>();
     private List<NotyBean> searchList = new ArrayList<>();
     private FlowViewAdapter flowViewAdapter = new FlowViewAdapter(this);
 
@@ -72,31 +74,36 @@ public class MainActivity extends BaseActivity {
 
     private void deleteNote(int itemId) {
         NotyDB.instance().delete(itemId);
-        updateView();
+        search(searchNotes.getText().toString());
     }
 
     private void saveNewNote(String content) {
         NotyDB.instance().insert(content);
-        updateView();
+        search(searchNotes.getText().toString());
     }
 
-    private void updateView() {
-        noties.clear();
-        noties.addAll(NotyDB.instance().search());
+    private List<NotyBean> getAllBeans() {
+        return NotyDB.instance().search();
+    }
+
+    private void updateContentList(List<NotyBean> list) {
+        contentList.clear();
+        contentList.addAll(list);
         flowViewAdapter.notifyDataChange();
     }
 
     private void updateNote(int itemId, String content) {
         NotyDB.instance().update(itemId,content);
-        updateView();
+        search(searchNotes.getText().toString());
     }
 
     @Override
     protected void initView() {
         NotyFlowView flowView = findViewById(noty);
-        flowViewAdapter.setList(noties);
+        flowViewAdapter.setList(contentList);
         flowView.setAdapter(flowViewAdapter);
         Button btn = findViewById(R.id.newTip);
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,10 +117,10 @@ public class MainActivity extends BaseActivity {
             public void onClick(int itemId, View item) {
 
                 Intent toEdit = new Intent(MainActivity.this, EditNoteActivity.class);
-                toEdit.putExtra("itemContent",noties.get(itemId).getContent());
-                toEdit.putExtra("itemTime",noties.get(itemId).getTime());
-                toEdit.putExtra("itemTime",noties.get(itemId).getTime());
-                toEdit.putExtra("itemId",noties.get(itemId).getId());
+                toEdit.putExtra("itemContent", contentList.get(itemId).getContent());
+                toEdit.putExtra("itemTime", contentList.get(itemId).getTime());
+                toEdit.putExtra("itemTime", contentList.get(itemId).getTime());
+                toEdit.putExtra("itemId", contentList.get(itemId).getId());
                 startActivityForResult(toEdit,REQUEST_UPDATE);
             }
         });
@@ -127,7 +134,7 @@ public class MainActivity extends BaseActivity {
                         .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deleteNote(noties.get(itemId).getId());
+                                deleteNote(contentList.get(itemId).getId());
                                 dialog.dismiss();
                             }
                         })
@@ -137,14 +144,38 @@ public class MainActivity extends BaseActivity {
                                 dialog.dismiss();
                             }
                         }).show();
+                return true;
+            }
+        });
+        searchNotes = findViewById(R.id.searchNotes);
 
+        searchNotes.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                search(v.getText().toString());
                 return true;
             }
         });
 
-
-
     }
+
+    //
+    private void search(String keyWord) {
+        if (keyWord.isEmpty()){
+            updateContentList(getAllBeans());
+            return;
+        }
+        searchList.clear();
+        List<NotyBean> allBeans = getAllBeans();
+        for (NotyBean bean : allBeans) {
+            //匹配
+            if(bean.getContent().contains(keyWord)){
+                searchList.add(bean);
+            }
+        }
+        updateContentList(searchList);
+    }
+
     @Override
     int layoutResId() {
         return R.layout.activity_main;
@@ -163,6 +194,7 @@ public class MainActivity extends BaseActivity {
         if (v instanceof EditText) {
             Rect outRect = new Rect();
             v.getGlobalVisibleRect(outRect);
+            //点击位置不在edittext中
             if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                 v.clearFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -176,8 +208,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        noties.clear();
-        noties.addAll(NotyDB.instance().search());
-        Log.d("listSize",noties.size()+"");
+        contentList.clear();
+        contentList.addAll(getAllBeans());
+        Log.d("listSize", contentList.size()+"");
     }
 }
