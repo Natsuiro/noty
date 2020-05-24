@@ -3,12 +3,17 @@ package com.szmy.noty;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.szmy.noty.adapter.FlowViewAdapter;
 import com.szmy.noty.model.NotyBean;
@@ -20,7 +25,6 @@ import java.util.List;
 import static com.szmy.noty.R.id.noty;
 
 public class MainActivity extends BaseActivity {
-
 
     private List<NotyBean> noties = new ArrayList<>();
     private List<NotyBean> searchList = new ArrayList<>();
@@ -137,10 +141,37 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
+
+
+
     }
     @Override
     int layoutResId() {
         return R.layout.activity_main;
+    }
+
+
+    /**
+     * 分发点击除 EditText 外区域，当前焦点在 ET 上，EditText 取消焦点
+     *
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        View v = getCurrentFocus();
+        if (v instanceof EditText) {
+            Rect outRect = new Rect();
+            v.getGlobalVisibleRect(outRect);
+            if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                v.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     @Override
