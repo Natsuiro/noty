@@ -16,8 +16,10 @@ public class NotyDB {
 
     private static NotyDB instance;
 
+    private NotyOpenHelper helper;
     private SQLiteDatabase getDatabase(){
-        return new NotyOpenHelper().getWritableDatabase();
+        if (helper==null) helper = new NotyOpenHelper();
+        return helper.getWritableDatabase();
     }
 
     public static NotyDB instance() {

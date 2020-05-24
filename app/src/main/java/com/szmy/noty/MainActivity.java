@@ -2,34 +2,29 @@ package com.szmy.noty;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.szmy.noty.adapter.MyAdapter;
+import com.szmy.noty.adapter.FlowViewAdapter;
 import com.szmy.noty.model.NotyBean;
 import com.szmy.noty.model.NotyDB;
 import com.szmy.noty.widget.NotyFlowView;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 import static com.szmy.noty.R.id.noty;
-
 
 public class MainActivity extends BaseActivity {
 
-    private List<NotyBean> noties = new ArrayList<>();
-    private MyAdapter myAdapter = new MyAdapter(this);
 
+    private List<NotyBean> noties = new ArrayList<>();
+    private List<NotyBean> searchList = new ArrayList<>();
+    private FlowViewAdapter flowViewAdapter = new FlowViewAdapter(this);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -84,7 +79,7 @@ public class MainActivity extends BaseActivity {
     private void updateView() {
         noties.clear();
         noties.addAll(NotyDB.instance().search());
-        myAdapter.notifyDataChange();
+        flowViewAdapter.notifyDataChange();
     }
 
     private void updateNote(int itemId, String content) {
@@ -95,8 +90,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         NotyFlowView flowView = findViewById(noty);
-        myAdapter.setList(noties);
-        flowView.setAdapter(myAdapter);
+        flowViewAdapter.setList(noties);
+        flowView.setAdapter(flowViewAdapter);
         Button btn = findViewById(R.id.newTip);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +138,6 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
     @Override
     int layoutResId() {
         return R.layout.activity_main;
