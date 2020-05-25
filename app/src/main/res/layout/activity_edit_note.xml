@@ -7,6 +7,13 @@
     android:orientation="vertical"
     tools:context=".EditNoteActivity">
 
+    <TextView
+        android:id="@+id/curTime"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <EditText
         android:gravity="top"
         android:id="@+id/note_content"

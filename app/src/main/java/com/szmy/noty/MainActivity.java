@@ -50,7 +50,6 @@ public class MainActivity extends BaseActivity {
             }
         //请求修改/查看/确认便签内容
         }else if (requestCode == REQUEST_UPDATE && resultCode == RESULT_OK){
-
             if(data!=null){
                 String content = data.getStringExtra("content");
                 int itemId = data.getIntExtra("itemId",-1);
@@ -118,7 +117,6 @@ public class MainActivity extends BaseActivity {
 
                 Intent toEdit = new Intent(MainActivity.this, EditNoteActivity.class);
                 toEdit.putExtra("itemContent", contentList.get(itemId).getContent());
-                toEdit.putExtra("itemTime", contentList.get(itemId).getTime());
                 toEdit.putExtra("itemTime", contentList.get(itemId).getTime());
                 toEdit.putExtra("itemId", contentList.get(itemId).getId());
                 startActivityForResult(toEdit,REQUEST_UPDATE);

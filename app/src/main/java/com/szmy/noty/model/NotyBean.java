@@ -7,7 +7,7 @@ import java.util.Date;
 public class NotyBean extends LitePalSupport {
 
     private int id;
-    private Date time;
+    private String time;
     private String content;
     private String title;
 
@@ -21,17 +21,17 @@ public class NotyBean extends LitePalSupport {
 
     public NotyBean(){}
 
-    public NotyBean(Date time, String content, String title) {
+    public NotyBean(String time, String content, String title) {
         this.time = time;
         this.content = content;
         this.title = title;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

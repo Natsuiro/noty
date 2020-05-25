@@ -32,7 +32,8 @@ public class NotyDB {
         ContentValues values = new ContentValues();
         values.put("title","title");
         values.put("content",data);
-        values.put("time",new Date().toString());
+        String time = SimpleDateFormat.getDateInstance().format(new Date());
+        values.put("time",time);
         db.insert("note",null,values);
         db.close();
         Log.d("insert","insert");
@@ -41,7 +42,9 @@ public class NotyDB {
     public void update(int itemId, String content){
         SQLiteDatabase db = getDatabase();
         ContentValues values = new ContentValues();
+        String time = SimpleDateFormat.getDateInstance().format(new Date());
         values.put("content",content);
+        values.put("time",time);
         db.update("note",values,"_id=?",new String[]{String.valueOf(itemId)});
         db.close();
     }
@@ -75,16 +78,7 @@ public class NotyDB {
                             notyBean.setTitle(cursor.getString(cursor.getColumnIndex(colsnames)));
                             break;
                         case "time":
-                            Date date = new Date();
-                            DateFormat ins = SimpleDateFormat.getDateInstance();
-                            try {
-                                date = ins.parse(cursor.getString(cursor.getColumnIndex(colsnames)));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            } finally {
-                                notyBean.setTime(date);
-                            }
-
+                            notyBean.setTime(cursor.getString(cursor.getColumnIndex(colsnames)));
                             break;
                         case "content":
                             notyBean.setContent(cursor.getString(cursor.getColumnIndex(colsnames)));

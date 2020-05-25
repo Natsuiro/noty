@@ -4,6 +4,9 @@ import android.view.View;
 import android.widget.TextView;
 import com.szmy.noty.R;
 import com.szmy.noty.model.NotyBean;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 public class FlowViewAdapter extends NotyAdapter<NotyBean> {
@@ -23,8 +26,9 @@ public class FlowViewAdapter extends NotyAdapter<NotyBean> {
     @Override
     void bindView(NotyViewHolder viewHolder, NotyBean item) {
         VH holder = (VH) viewHolder;
-        holder.textView.setMaxWidth(400);
-        holder.textView.setText(item.getContent());
+        holder.content.setMaxWidth(400);
+        holder.content.setText(item.getContent());
+        holder.time.setText(item.getTime());
         //内容需要换行
     }
 
@@ -41,10 +45,12 @@ public class FlowViewAdapter extends NotyAdapter<NotyBean> {
     }
 
     static class VH extends NotyViewHolder{
-        TextView textView;
+        TextView content;
+        TextView time;
         VH(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.text);
+            content = itemView.findViewById(R.id.text);
+            time = itemView.findViewById(R.id.time);
         }
     }
 }

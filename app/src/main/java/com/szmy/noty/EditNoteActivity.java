@@ -7,11 +7,16 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EditNoteActivity extends BaseActivity {
 
     private Button save;
     private EditText noteContent;
+    private TextView time;
     private Intent data;
     private int itemId;
     @Override
@@ -22,12 +27,15 @@ public class EditNoteActivity extends BaseActivity {
     @Override
     void initView() {
         noteContent = findViewById(R.id.note_content);
+        time = findViewById(R.id.curTime);
         if (data!=null){
             String itemContent = data.getStringExtra("itemContent");
             noteContent.setText(itemContent);
             noteContent.setSelection(noteContent.getText().length());
             itemId = data.getIntExtra("itemId",-1);
         }
+        String nowTime = SimpleDateFormat.getDateInstance().format(new Date());
+        time.setText(nowTime);
 
         save = findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
